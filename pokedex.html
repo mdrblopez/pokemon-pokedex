@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokedex</title>
+    <link rel="stylesheet" href="pokedex.css" />
+  </head>
+  <body>
+    <!-- Fixed Header -->
+    <div class="header" id="header">
+      <img
+        src="https://sg.portal-pokemon.com/img/common/logo.png"
+        alt="Pokemon"
+      />
+      <img id="pokedexLogo" src="pokedex.png" alt="Pokemon" />
+    </div>
+    <div class="content">
+      <!-- Search Box for Pokemon -->
+      <div class="searchName">
+        <p>Name or Type</p>
+      </div>
+
+      <div class="searchBox">
+        <input type="text" id="searchBox" />
+        <button id="search">Search</button>
+        <!-- Display message -->
+        <div class="message" id="message"></div>
+      </div>
+
+      <!-- Pokemon List of Pokemon Div -->
+      <div class="pokemonList" id="pokemonList"></div>
+      <!-- Div for the search pokemon or type -->
+      <div class="searchPokemon" id="searchPokemon"></div>
+      <!-- Button to Load more -->
+      <div class="loadMore">
+        <button id="loadMore">Load more Pokemon</button>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="pokedex.js"></script>
+  </body>
+</html>
