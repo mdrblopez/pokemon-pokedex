@@ -7,7 +7,7 @@ const msgDisplay = document.getElementById("messageDisplay");
 const searchBox = document.getElementById("searchBox");
 
 // Global Variables
-const limit = 12; // To set the default number of pokemon to display
+const limit = 100; // To set the default number of pokemon to display
 let offset = 0;
 let hide = 0;
 let searchCounter = 0;
@@ -17,6 +17,7 @@ let namePokemon = "";
 let allDetails = [];
 let allTypeLoaded = [];
 let checkMessageDisplay = 0;
+let searchList = [];
 
 // Map for different types of pokemon (background color)
 let color1st = "white";
@@ -49,6 +50,7 @@ async function getPokemon() {
 
     const response = await fetch(apiURL);
     const itemList = await response.json();
+    console.log(itemList);
     resultList = itemList.results.map((item) => item);
     offset = offset + limit;
     console.log(resultList);
@@ -58,7 +60,7 @@ async function getPokemon() {
   }
 }
 
-// The fetch the pokemond details
+// The fetch the pokemon details
 async function displayPokemon() {
   // Map method will create a new array (promises) to save all individual detail
   const promises = resultList.map(async (item) => {
@@ -70,7 +72,7 @@ async function displayPokemon() {
   const batchDetails = [];
   batchDetails.push(...(await Promise.all(promises)));
   allDetails.push(...batchDetails);
-
+  console.log(allDetails);
   // to individually evaluate the pokemon detail
   for (const eachDetail of batchDetails) {
     displayPokemonDetails(eachDetail);
@@ -89,6 +91,7 @@ function displayPokemonDetails(pokemonDetails) {
   pokemonType.forEach((type) => {
     const pokemonType = type.type.name;
     const pokemonTypeDisplay = capitalizeLetter(type.type.name);
+    // capitalizeLetter is a function to capitalize the first letter
     // the pokemon type and its details are to be saved in allTypeLoaded array
     if (pokemonDetails.types.length == 1) {
       pokemonFirstType = pokemonTypeDisplay;
@@ -177,6 +180,15 @@ search.addEventListener("click", () => {
     hide = 1;
   }
 
+  // another search from the search list
+  if (hide == 1 && searchList.length > 0) {
+    for (let i = 0; i < searchCounter; i++) {
+      const div = document.getElementById("searchDisplay");
+      div.remove();
+    }
+    searchCounter = 0;
+  }
+
   // check the pokemonList if the search name exist
   allDetails.forEach((individualDetail) => {
     if (
@@ -185,22 +197,26 @@ search.addEventListener("click", () => {
     ) {
       hide = 1;
       // Call getPokemonType function to create elements for seach item
+      searchList.push(individualDetail);
       displayPokemonDetails(individualDetail);
     }
   });
+
   // check the pokemon TYPE if the search type exist
   console.log(allTypeLoaded);
-  if (hide == 0 && searchText !== "") {
+  if (searchText !== "") {
     allTypeLoaded.forEach((eachType) => {
       if (eachType.name.includes(searchText) && searchText !== "") {
         hide = 1;
         // Call displayPokemonDetails function to create elements for seach item
+        searchList.push(eachType.detail);
+        console.log(searchList);
         displayPokemonDetails(eachType.detail);
       }
     });
   }
 
-  // if(hide == 0 && searchText !== "")
+  // Cannot find the searchText
   if (hide == 0 && searchText !== "") {
     messageDisplay(
       "We could not find any matches. Double check your search for any typos or spelling errors - or try a different search term."
@@ -243,6 +259,7 @@ function showListAndRemoveSearchDisplay() {
   hide = 0;
   checkMessageDisplay = 0;
   searchBox.value = "";
+  searchList = [];
 }
 
 getPokemon();
